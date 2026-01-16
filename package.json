@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "axios": "^1.13.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "name": "discord-webhook-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonyk9919/discord-pr-webhook-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sonyk9919/discord-pr-webhook-server/issues"
+  },
+  "homepage": "https://github.com/sonyk9919/discord-pr-webhook-server#readme"
+}
