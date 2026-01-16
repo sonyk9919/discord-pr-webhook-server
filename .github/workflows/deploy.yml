@@ -1,0 +1,36 @@
+name: Deploy Linux Server
+
+on: 
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: web-hook-url
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: SSH Remote Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.NAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          fingerprint: ""
+          script: |
+            mkdir -p ~/app
+            cd ~/app
+            
+            if [ -d ".git" ]; then
+              git pull origin main
+            else
+              git clone https://github.com/${{ github.repository }}.git .
+            fi
+
+            echo "WEB_HOOK_URL=${{ secrets.WEB_HOOK_URL }}" > .env
+
+            docker-compose down
+            docker-compose up -d --build
