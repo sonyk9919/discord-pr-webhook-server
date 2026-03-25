@@ -1,0 +1,44 @@
+name: Deploy Linux Server
+
+on: 
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: web-hook-url
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: SSH Remote Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.NAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          fingerprint: ""
+          script: |
+            mkdir -p ~/app
+            cd ~/app
+
+            if [ -d ".git" ]; then
+              git fetch --all
+              git reset --hard origin/main
+            else
+              git clone https://${{ secrets.GH_TOKEN }}@github.com/sonyk9919/discord-pr-webhook-server.git .
+            fi
+
+            echo "WEB_HOOK_URL=${{ secrets.WEB_HOOK_URL }}" > .env
+            echo "ISSUE_WEB_HOOK_URL=${{ secrets.ISSUE_WEB_HOOK_URL }}" >> .env
+            
+            if [ -f "docker-compose.yml" ]; then
+              docker-compose down
+              docker-compose up -d --build
+              docker image prune -f
+            else
+              echo "Error: docker-compose.yml not found in ~/app"
+              exit 1
+            fi
