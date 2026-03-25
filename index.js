@@ -38,7 +38,7 @@ app.post('/webhook/github', async (req, res) => {
                     title: issue.title,
                     description: issue.body ? issue.body.substring(0, 100) + "..." : "내용 없음",
                     url: issue.html_url,
-                    color: 15158332,
+                    color: 15158331,
                 }]
             });
             console.log('✅ 이슈 알림 전송 성공');
